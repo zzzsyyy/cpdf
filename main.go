@@ -48,7 +48,7 @@ func verifyOutput(def string, out string) string {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: pdf_tool [-c | --compress] [-m | --merge] [-v | --version]")
+		fmt.Println("Usage: cpdf [-c | --compress] [-m | --merge] [-v | --version]")
 		return
 	}
 
