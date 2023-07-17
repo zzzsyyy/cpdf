@@ -186,7 +186,7 @@ func compressPDF(pdfFiles []string) {
 		log.Fatal(err)
 	}
 
-	command := fmt.Sprintf("gs -q -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dPDFSETTINGS=/%s -dNOPAUSE -dQUIET -dBATCH -sOutputFile=\"%s\" \"%s\" -c quit", cType, output, compressingFile)
+	command := fmt.Sprintf("gs -q -sDEVICE=pdfwrite -dCompatibilityLevel=1.6 -dNumRenderingThreads=4 -dPDFSETTINGS=/%s -dNOPAUSE -dQUIET -dBATCH -sOutputFile=\"%s\" \"%s\" -c quit", cType, output, compressingFile)
 	cmd := exec.Command("sh", "-c", command)
 	err = cmd.Run()
 	if err != nil {
@@ -201,7 +201,13 @@ func compressPDF(pdfFiles []string) {
 	}
 
 	compressionPercentage := (1 - float64(finalSize)/float64(initialSize)) * 100
-	fmt.Printf("%s : %s -> %s, -%.2f%%\n", compressingFile, formatSize(initialSize), formatSize(finalSize), compressionPercentage)
+	compressionResult := fmt.Sprintf("%.2f%%", compressionPercentage)
+	if compressionPercentage > 0 {
+		compressionResult = fmt.Sprintf("\033[31m-%.2f%%\033[0m", compressionPercentage)
+	} else if compressionPercentage < 0 {
+		compressionResult = fmt.Sprintf("\033[32m+%.2f%%\033[0m", -compressionPercentage)
+	}
+	fmt.Printf("%s : %s -> %s, %s\n", compressingFile, formatSize(initialSize), formatSize(finalSize), compressionResult)
 	fmt.Println("压缩成功！")
 }
 
