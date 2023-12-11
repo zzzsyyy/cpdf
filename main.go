@@ -6,12 +6,21 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/AlecAivazis/survey/v2"
 )
 
-var compressType = []string{"ebook", "screen", "printer", "prepress", "default"}
+var (
+	compressType = []string{"ebook", "screen", "printer", "prepress", "default"}
+)
+
+var (
+	Version     string
+	Commit      string
+	BuildSource = "unknown"
+)
 
 func verifyOutput(def string, out string) string {
 	prompt := &survey.Input{
@@ -68,8 +77,8 @@ func main() {
 	}
 
 	if version {
-		fmt.Println("Version 1.1")
-		return
+		fmt.Printf("cpdf v%s@%s, %s, %s/%s\n", Version, Commit, BuildSource, runtime.GOOS, runtime.GOARCH)
+		os.Exit(0)
 	}
 
 	fmt.Println("欢迎使用 pdf 工具")
